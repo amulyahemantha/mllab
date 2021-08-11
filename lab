@@ -1,0 +1,92 @@
+Aim : To implement FIND – S algorithm for finding the most specific
+hypothesis based on a given set of training data samples.
+#Importing the Packages
+import pandas as pd
+import numpy as np
+#Loading the Dataset
+Code:
+data=pd.read_csv("EnjoySport1.csv")
+print(data)
+Output:
+ Example Sky AirTemp Humidity Wind Water Forecast EnjoySport
+0 1 Sunny Warm Normal Strong Warm Same Yes
+1 2 Sunny Warm High Strong Warm Same Yes
+2 3 Rainy Cold High Strong Warm Change No
+3 4 Sunny Warm Normal Strong Cool Change Yes
+#Printing the Attributes and the target attribute
+Code:
+d=np.array(data)[:,1:-1]
+print("The attributes are : ",d)
+target=np.array(data)[:,-1]
+print("The target is : ",target)
+#Applying the Find-S Algorithm
+Code:
+def train(c,t):
+ for i,val in enumerate(t):
+ if val=="Yes":
+ specific_hypo=c[i].copy()
+ break
+ for i,val in enumerate(c):
+ if t[i]=="Yes":
+ for x in range(len(specific_hypo)):
+ if val[x]!=specific_hypo[x]:
+ specific_hypo[x]='?'
+ else:
+ pass
+ return specific_hypo
+print("The final hypothesis is : ",train(d,target))
+
+
+
+
+Aim:To implement Decision Tree for classification of any given data set.
+#Importing Packages
+import numpy as np
+import pandas as pd
+import csv
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.tree import export_graphviz
+from sklearn import *
+from sklearn.metrics import *
+from sklearn import preprocessing
+from sklearn.preprocessing import StandardScaler
+from sklearn.model_selection import train_test_split
+from IPython.display import Image
+from sklearn import metrics
+from io import StringIO
+import pydot
+#Importing the Dataset
+Code:
+data=pd.read_csv("data_entry_DT.csv")
+data.shape
+Output:
+(14, 6)
+#Separating and printing the Input attributes and target attribute
+Code:
+x=data.iloc[1:,:-1]
+print(x)
+y=data.iloc[1:,-1:]
+print(y)
+le=preprocessing.LabelEncoder()
+data1=data.apply(le.fit_transform)
+X=data1.iloc[1:,:-1]
+Y=data1.iloc[1:,-1:]
+#Splitting the data into training and testing data
+Code:
+x_train,x_test,y_train,y_test=train_test_split(X,Y,test_size=0.3,random_state=1)
+#Fitting the Model and Printing the Decision tree, Checking the accuracy
+Code:
+dtc=DecisionTreeClassifier(criterion='entropy')
+dtc.fit(x_train,y_train)
+import graphviz
+from sklearn.tree import *
+graphviz.Source(export_graphviz(dtc,
+ out_file=None,
+ feature_names=X.columns,
+ class_names=["no","yes"],
+ filled=True)
+ preds=dtc.predict(x_test)
+accuracy_score(y_test,preds)
+
+
+
